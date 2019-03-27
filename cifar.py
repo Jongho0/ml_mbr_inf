@@ -188,32 +188,44 @@ def main(num_target=1, num_shadow=10, training_size=5000, test_size=1000, epochs
 def size_class_exp(num_shadow=100, epochs=100, result_file='result.csv'):
     result = [['training_size']+[i for i in range(1,11)]]
     for training_size in [2500, 5000, 10000, 15000]:
-        result_row = [training_size]
+        accuracy, precision, recall = [training_size], [training_size], [training_size]
         for num_class in range(1,11):
             _LOG_PRINT('ts : ', training_size, 'cl : ', num_class)
             scores = main(1,num_shadow,training_size,2000,epochs,num_class)
-            result_row.append(sum(scores[0])/len(scores[0]))
-        result.append(result_row)
+            accuracy.append(sum(scores[0])/len(scores[0]))
+            precision.append(sum(scores[1])/len(scores[1]))
+            recall.append(sum(scores[2])/len(scores[2]))
+        result.append(accuracy)
+        result.append(precision)
+        result.append(recall)
     return result
 
 def shadow_num_exp(training_size=5000, test_size=1000, epochs=10, num_class=10, result_file='result.csv'):
     shadow_sizes = [1,10,50,100]
     result = [shadow_sizes]
-    result_row = []
+    accuracy, precision, recall = [], [], []
     for num_shadow in shadow_sizes:
         scores = main(1,num_shadow,training_size,test_size,epochs,num_class)
-        result_row.append(sum(scores[0])/len(scores[0]))
-    result.append(result_row)
+        accuracy.append(sum(scores[0])/len(scores[0]))
+        precision.append(sum(scores[1])/len(scores[1]))
+        recall.append(sum(scores[2])/len(scores[2]))
+    result.append(accuracy)
+    result.append(precision)
+    result.append(recall)
     return result
 
 def overfitting_exp(num_shadow=10,training_size=5000, test_size=1000, num_class=10, result_file='result.csv'):
     epochs_sizes = [10, 50, 100, 200, 500]
     result = [epochs_sizes]
-    result_row = []
+    accuracy, precision, recall = [], [], []
     for epochs in epochs_sizes:
         scores = main(1,num_shadow,training_size,test_size,epochs,num_class)
-        result_row.append(sum(scores[0])/len(scores[0]))
-    result.append(result_row)
+        accuracy.append(sum(scores[0])/len(scores[0]))
+        precision.append(sum(scores[1])/len(scores[1]))
+        recall.append(sum(scores[2])/len(scores[2]))
+    result.append(accuracy)
+    result.append(precision)
+    result.append(recall)
     return result
 
 if __name__== '__main__':
@@ -225,7 +237,7 @@ if __name__== '__main__':
     parser.add_argument('-e', '--epochs', type=int, default=10)
     parser.add_argument('-c', '--num_class', type=int, default=10)
     parser.add_argument('-v', '--verbose', action='count', help='verbose mode')
-    parser.add_argument('-r', '--result_file', default='result.csv', help='file name for the result')
+    parser.add_argument('-r', '--result_file', default='result.csv', type=str, help='file name for the result')
     parser.add_argument('--size_class_exp', action='count', help='experiment with training size and class size')
     parser.add_argument('--shadow_exp', action='count', help='experiment with shadow size')
     parser.add_argument('--overfit_exp', action='count', help='experiment with overfitting')
@@ -233,6 +245,7 @@ if __name__== '__main__':
 
     if args.verbose:
         _LOG_PRINT = print
+        VERBOSE = 1
 
     if args.size_class_exp:
         result = size_class_exp(args.num_shadow, args.epochs)
@@ -247,7 +260,3 @@ if __name__== '__main__':
         writer = csv.writer(csvfile)
         for r in result:
             writer.writerow(r)
-    
-
-
-    
