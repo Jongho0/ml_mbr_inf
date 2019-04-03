@@ -1,11 +1,8 @@
 import argparse
 import csv
-# import keras
 import numpy as np
 from sklearn.utils import resample, shuffle
 
-# TODO corr between overfitting and attack precision
-# TODO corr between # of shadows and attack precision
 LEARNING_RATE = 0.001
 IN = 1
 OUT = 0
@@ -139,12 +136,6 @@ def get_score_svm_models(models, test_data):
         rec_scores.append(recall_score(y_true[i], y_pred))
     return (acc_scores, pre_scores, rec_scores)
 
-def export_result():
-    # target model's training accuracy, test accuracy
-    # shadow models' training accuracy, test accuracy
-    # attack accuracy
-    pass
-
 def main(num_target=1, num_shadow=10, training_size=5000, test_size=1000, epochs=10, num_class=10): 
     def split_pair(x_data, y_data, split_point):
         assert len(x_data) == len(y_data)
@@ -185,6 +176,7 @@ def main(num_target=1, num_shadow=10, training_size=5000, test_size=1000, epochs
 
     return scores
 
+# Experiments
 def size_class_exp(num_shadow=100, epochs=100, result_file='result.csv'):
     result = [['training_size']+[i for i in range(1,11)]]
     for training_size in [2500, 5000, 10000, 15000]:
