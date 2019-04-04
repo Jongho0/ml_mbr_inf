@@ -3,13 +3,10 @@ import numpy as np
 from sklearn.utils import resample
 
 LEARNING_RATE = 0.001
-#EPOCH = 100
 EPOCH = 100
-DATA_SIZE = 5000
 TRAINING_SIZE = 3000
 TEST_SIZE = 2000
 NUM_TARGET = 1
-#NUM_SHADOW = 100
 NUM_SHADOW = 20
 IN = 1
 OUT = 0
@@ -20,20 +17,15 @@ def load_data(path='UCI.adult.data'):
     import pandas as pd
     from sklearn.preprocessing import LabelEncoder
     from sklearn.model_selection import train_test_split
-    """Loads the UCI dataset.
-    # Arguments
-        path: path where to cache the dataset locally
-            (relative to ~/.keras/datasets).
-    # Returns
-        Tuple of Numpy arrays: `(x_train, y_train), (x_test, y_test)`.
-    """
-    path = get_file(path,
-                    origin='http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data')
+
+    path = get_file(path, origin='http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data')
     f = pd.read_csv(path, header=None)
+
     # encode the categorical values
     for col in [1,3,5,6,7,8,9,13,14]:
         le = LabelEncoder()
         f[col] = le.fit_transform(f[col].astype('str'))
+    
     # normalize the values
     x_range = [i for i in range(14)]
     f[x_range] = f[x_range]/f[x_range].max()
